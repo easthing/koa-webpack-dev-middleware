@@ -5,28 +5,28 @@ const expressMiddleware = require('webpack-dev-middleware');
 function middleware(doIt, req, res) {
   const { end: originalEnd } = res;
 
-  return (done) => {
+  return new Promise(function(resolve, reject) {
     res.end = function end() {
       originalEnd.apply(this, arguments);
-      done(null, 0);
+      resolve(0);
     };
+
     doIt(req, res, () => {
-      done(null, 1);
-    })
-  };
+      resolve(1);
+    });
+  });
 }
 
 module.exports = (compiler, option) => {
   const doIt = expressMiddleware(compiler, option);
 
-  function* koaMiddleware(next) {
-    const ctx = this;
+  async function koaMiddleware(ctx, next) {
     const { req } = ctx;
     const locals = ctx.locals || ctx.state;
 
     ctx.webpack = doIt;
 
-    const runNext = yield middleware(doIt, req, {
+    const runNext = await middleware(doIt, req, {
       end(content) {
         ctx.body = content;
       },
@@ -37,7 +37,7 @@ module.exports = (compiler, option) => {
     });
 
     if (runNext) {
-      yield *next;
+        await next();
     }
   }
 
