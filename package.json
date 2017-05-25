@@ -1,16 +1,13 @@
 {
   "name": "koa-webpack-develop-middleware",
-  "version": "1.4.6",
+  "version": "1.4.7",
   "description": "webpack dev middleware for koa@2",
   "keywords": [
     "koa",
     "webpack",
     "middleware"
   ],
-  "main": "lib/index",
-  "files": [
-    "lib"
-  ],
+  "main": "src/index",
   "homepage": "git@github.com:easthing/koa-webpack-develop-middleware.git",
   "author": "eassthing@gmail.com",
   "repository": {
